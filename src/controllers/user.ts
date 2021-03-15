@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
-const DB_URI = "";
-
-mongoose.connect(DB_URI, function(err){
+/*
+mongoose.connect(process.env.DB_URI, function(err){
     if(err){
         console.error('Error! ' + err)
     } else {
       console.log('Connected to mongodb')      
     }
-});
+});*/
 
 export default class UserController {
 
