@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-    id: { 
-        type: String,
-        required: true,
-        unique: true
-    },
+    _id: String, 
     name: String,
     password: String,
+    email: {
+        type: String,
+        unique: true
+    },
     friends: [
         {id: String}
     ],
@@ -20,6 +20,6 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
-});
+}, { _id: false });
 
 export default mongoose.model('User', UserSchema, 'users');

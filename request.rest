@@ -1,0 +1,39 @@
+###
+
+POST http://localhost:5000/api/register
+Content-type: application/json
+
+{
+    "name": "Grzesiek",
+    "password": "pass",
+    "email": "mail@chat.pl"
+}
+###
+
+POST http://localhost:5000/api/refresh
+Content-type: application/json
+Authorization: Bearer 28U5FP4GKT1qtdoN4Pla4pzSjA7ffs1I_9E
+
+{
+    "token": "eyJhbGciitWzgZ98pyM-Vh9PNXbI"
+}
+
+###
+
+POST http://localhost:5000/api/logout
+Authorization: Bearer 4Pla4pzSjA7ffs1I_9E
+
+###
+
+POST http://localhost:5000/api/login
+Content-type: application/json
+
+{
+    "email": "mail@chat.pl",
+    "password": "pass"
+}
+###
+
+GET http://localhost:5000/api/data
+Content-type: application/json
+Authorization: Bearer tdoN4Pla4pzSjA7ffs1I_9E
