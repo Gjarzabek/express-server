@@ -41,7 +41,7 @@ async function registerCallback(req: any, res: any, newUserId: string) {
     const hashPassword = await bcrypt.hash(req.body.pass, salt);
 
     if (await User.findOne({email: req.body.email}) != null) {
-        res.status(401).send('email allready occupied');
+        res.status(500).send('email allready occupied');
         return;
     }
     let user = new User({
@@ -62,7 +62,7 @@ async function registerCallback(req: any, res: any, newUserId: string) {
             console.log(err)
 
         } else {
-            res.sendStatus(500);
+            res.sendStatus(200);
         }
     });
 }
