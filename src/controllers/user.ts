@@ -38,7 +38,7 @@ function generateUserID(req: any, res: any) {
 async function registerCallback(req: any, res: any, newUserId: string) {
     // Create an user object
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const hashPassword = await bcrypt.hash(req.body.pass, salt);
 
     if (await User.findOne({email: req.body.email}) != null) {
         res.status(401).send('email allready occupied');
@@ -60,12 +60,9 @@ async function registerCallback(req: any, res: any, newUserId: string) {
     user.save((err: any, registeredUser: any) => {
         if (err) {
             console.log(err)
+
         } else {
-            // create payload then Generate an access token
-            let payload = {
-                id: registeredUser._id
-            };
-            res.status(200).send(payload);
+            res.sendStatus(500);
         }
     });
 }
@@ -83,7 +80,7 @@ export default class UserController {
 
     static async register(req: any, res: any) {
         console.log("register:", req.body);
-        //Hash password 
+        //Hash password
         generateUserID(req, res);
     }
 
@@ -103,7 +100,7 @@ export default class UserController {
                     if (!validPass)
                         return res.status(401).send("Mobile/Email or Password is wrong");
                     user = user.toJSON();
-                    
+
                     // Create and assign token
                     const token = generateAccesToken({id: user._id, email: user.email});
                     let refresh_token = undefined;
@@ -116,7 +113,7 @@ export default class UserController {
                 else {
                     res.status(401).send('Invalid mobile')
                 }
-    
+
             }
         })
     }
@@ -150,27 +147,27 @@ export default class UserController {
     static verifyUserToken(req: any, res: any, next: any) {
         let token = req.headers.authorization;
         if (!token) return res.status(401).send("Access Denied / Unauthorized request");
-    
+
         try {
             token = token.split(' ')[1] // Remove Bearer from string
-    
+
             if (token === 'null' || !token) return res.status(401).send('Unauthorized request');
-    
+
             //@ts-ignore
             let verifiedUser = jwt.verify(token, process.env.ACCESS_SECRET_TOKEN);
             if (!verifiedUser)
                 return res.status(401).send('Unauthorized request')
-    
+
             req.user = verifiedUser; // user_id
             if (!usersOnline.has(req.user.email)) {
                 return res.status(401).send('Unauthorized request')
             }
             next();
-    
+
         } catch (error) {
             res.status(400).send("Invalid Token");
         }
-    
+
     }
 
 }
