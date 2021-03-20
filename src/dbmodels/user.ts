@@ -4,6 +4,10 @@ const UserSchema = new mongoose.Schema({
     _id: String, 
     name: String,
     password: String,
+    status: {
+        type: String,
+        default: "niedostępny"
+    },
     email: {
         type: String,
         unique: true
@@ -17,9 +21,10 @@ const UserSchema = new mongoose.Schema({
     notifications: [],
     desc: String,
     icon: {
-        type: Number,
-        default: 0
-    }
+        type: String,
+        default: "bird"
+    },
+    joinTime: String
 }, { _id: false });
 
 export default mongoose.model('User', UserSchema, 'users');

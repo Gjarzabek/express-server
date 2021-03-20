@@ -53,7 +53,8 @@ async function registerCallback(req: any, res: any, newUserId: string) {
         chats: [],
         notifications: [],
         desc: "",
-        icon: 0
+        icon: 0,
+        joinTime: (new Date()).toISOString().slice(0, 10)
     });
 
     // Save User in the database
@@ -88,7 +89,7 @@ export default class UserController {
         console.log("login:", req.body);
 
         if (usersOnline.has(req.body.email)) {
-            return res.status(401).send("Allready logged on another device");
+            return res.status(400).send("Allready logged on another device");
         }
 
         User.findOne({ email: req.body.email }, async (err: any, user: any) => {
@@ -96,9 +97,9 @@ export default class UserController {
                 console.log("DB ERROR", err)
             } else {
                 if (user) {
-                    const validPass = await bcrypt.compare(req.body.password, user.password);
+                    const validPass = await bcrypt.compare(req.body.pass, user.password);
                     if (!validPass)
-                        return res.status(401).send("Mobile/Email or Password is wrong");
+                        return res.status(400).send("Mobile/Email or Password is wrong");
                     user = user.toJSON();
 
                     // Create and assign token
@@ -108,10 +109,16 @@ export default class UserController {
                         refresh_token = jwt.sign({id: user._id, email: user.email}, process.env.REFRESH_SECRET_TOKEN);
                         usersOnline.set(user.email, refresh_token);
                     }
-                    res.status(200).send({"token": token, "refresh": refresh_token});
+                    res.status(200).send({"user": {
+                        email: user.email,
+                        id: user._id,
+                        name: user.name,
+                        token: token,
+                        refresh: refresh_token
+                    }});
                 }
                 else {
-                    res.status(401).send('Invalid mobile')
+                    res.status(400).send('Wrong email');
                 }
 
             }
