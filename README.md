@@ -1,2 +1,2 @@
 # express-server
-http/auth server for niezaleznychat
+http/auth server for niezalezny-chat app 
