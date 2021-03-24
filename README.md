@@ -1,2 +1,2 @@
 # express-server
-http server for niezaleznychat
+http/auth server for niezaleznychat
