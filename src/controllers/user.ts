@@ -53,7 +53,6 @@ async function registerCallback(req: any, res: any, newUserId: string) {
         chats: [],
         notifications: [],
         desc: "",
-        icon: 0,
         joinTime: (new Date()).toISOString().slice(0, 10)
     });
 
@@ -91,8 +90,7 @@ export default class UserController {
         if (usersOnline.has(req.body.email)) {
             return res.status(400).send("Allready logged on another device");
         }
-
-        User.findOne({ email: req.body.email }, async (err: any, user: any) => {
+        User.findOneAndUpdate({ email: req.body.email }, {status: "dostępny"}, {new: true}, async (err: any, user: any) => {
             if (err) {
                 console.log("DB ERROR", err)
             } else {
@@ -126,8 +124,9 @@ export default class UserController {
     }
 
     static async logout(req: any, res: any) {
-        console.log("logout");
+        console.log("logout:", req.user.email);
         usersOnline.delete(req.user.email);
+        User.findOneAndUpdate({ email: req.user.email }, {status: "niedostępny"});
         res.json("Logout Success");
     }
 
@@ -152,7 +151,7 @@ export default class UserController {
     }
 
     static verifyUserToken(req: any, res: any, next: any) {
-        let token = req.headers.authorization;
+        let token = req.body.auth;
         if (!token) return res.status(401).send("Access Denied / Unauthorized request");
 
         try {
