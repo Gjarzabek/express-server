@@ -6,10 +6,7 @@ const ChatSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    users: [
-        {id: String}
-    ],
-    name: String,
+    users: [String],
     type: {
         type: Number,
         required: true,
@@ -19,9 +16,7 @@ const ChatSchema = new mongoose.Schema({
             timestamp: Number,
             content: String,
             author: {
-                name: String,
                 id: String,
-                icon: Number,
                 required: true
             }
         }

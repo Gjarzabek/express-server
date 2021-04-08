@@ -4,6 +4,14 @@ const UserSchema = new mongoose.Schema({
     _id: String, 
     name: String,
     password: String,
+    private: {
+        type: String,
+        required: true
+    },
+    public: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
         default: "niedostępny"

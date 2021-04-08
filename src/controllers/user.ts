@@ -36,18 +36,20 @@ function generateUserID(req: any, res: any) {
 }
 
 async function registerCallback(req: any, res: any, newUserId: string) {
-    // Create an user object
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(req.body.pass, salt);
-
     if (await User.findOne({email: req.body.email}) != null) {
         res.status(500).send('email allready occupied');
         return;
     }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.pass, salt);
+
     let user = new User({
         _id: newUserId,
         name: req.body.name,
         password: hashPassword,
+        private: req.body.private,
+        public: req.body.public,
         email: req.body.email,
         friends: [],
         chats: [],
@@ -112,7 +114,8 @@ export default class UserController {
                         id: user._id,
                         name: user.name,
                         token: token,
-                        refresh: refresh_token
+                        refresh: refresh_token,
+                        secret: user.private
                     }});
                 }
                 else {
