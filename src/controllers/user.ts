@@ -88,18 +88,21 @@ export default class UserController {
 
     static async login(req: any, res: any) {
         console.log("login:", req.body);
-
+        /*
         if (usersOnline.has(req.body.email)) {
             return res.status(400).send("Allready logged on another device");
         }
+        */
         User.findOneAndUpdate({ email: req.body.email }, {status: "dostępny"}, {new: true}, async (err: any, user: any) => {
             if (err) {
                 console.log("DB ERROR", err)
             } else {
                 if (user) {
                     const validPass = await bcrypt.compare(req.body.pass, user.password);
-                    if (!validPass)
+                    if (!validPass) {
+                        console.log("wrong password!", req.body.pass);
                         return res.status(400).send("Mobile/Email or Password is wrong");
+                    }
                     user = user.toJSON();
 
                     // Create and assign token
@@ -119,6 +122,7 @@ export default class UserController {
                     }});
                 }
                 else {
+                    console.log("Wrong mail!", req.body.email);
                     res.status(400).send('Wrong email');
                 }
 

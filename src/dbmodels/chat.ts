@@ -1,11 +1,6 @@
 import mongoose from 'mongoose';
 
 const ChatSchema = new mongoose.Schema({
-    id: { 
-        type: String,
-        required: true,
-        unique: true
-    },
     users: [String],
     type: {
         type: Number,

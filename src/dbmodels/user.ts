@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
         {id: String}
     ],
     chats: [
-        {id: String}
+        {id: String, note: String}
     ],
     notifications: [],
     desc: String,
