@@ -88,11 +88,7 @@ export default class UserController {
 
     static async login(req: any, res: any) {
         console.log("login:", req.body);
-        /*
-        if (usersOnline.has(req.body.email)) {
-            return res.status(400).send("Allready logged on another device");
-        }
-        */
+
         User.findOneAndUpdate({ email: req.body.email }, {status: "dostępny"}, {new: true}, async (err: any, user: any) => {
             if (err) {
                 console.log("DB ERROR", err)
@@ -110,7 +106,6 @@ export default class UserController {
                     let refresh_token = undefined;
                     if (process.env.REFRESH_SECRET_TOKEN) {
                         refresh_token = jwt.sign({id: user._id, email: user.email}, process.env.REFRESH_SECRET_TOKEN);
-                        usersOnline.set(user.email, refresh_token);
                     }
                     res.status(200).send({"user": {
                         email: user.email,
@@ -172,9 +167,11 @@ export default class UserController {
                 return res.status(401).send('Unauthorized request')
 
             req.user = verifiedUser; // user_id
+            /*
             if (!usersOnline.has(req.user.email)) {
                 return res.status(401).send('Unauthorized request')
             }
+            */
             next();
 
         } catch (error) {
